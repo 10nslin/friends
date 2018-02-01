@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <title>DashBoard</title>
+</head>
+<body>
+    <div class="container text-center mt-3">
+        <a href="/logout">Logout</a> 
+        <br> 
+    <h2>Hello, {{user.first_name}}!</h2> 
+    {% if count == 0 %}
+    <h2 class="alert alert-info" >You are the first user. Please wait for other user to get registered</h2>
+    {% else %}
+    <h3>Here is the list of your friends: </h3>
+    
+    <table class="table">      
+            <thead>
+            <tr>
+                <th>Alias</th>
+                <th>Action</th>
+            </tr>
+            </thead>  
+            {%if user.friends_with.all%}          
+            {% for key in user.friends_with.all %}
+            <tr>
+                <td>{{key.first_name}}</a></td>
+                <td><a href="user/{{key.id}}/">View profile</a>|<a href="remove/{{key.id}}/">Remove as Friend</a></td>
+            </tr>
+            {%endfor%}
+            {%else%}
+            <h5 class="alert alert-info" >You don't have friends yet!</h5>
+            {%endif%}
+        </table>
+    
+    
+    
+            <h3>Other users not on your friend list: </h3>
+            <table class="table">
+            <thead>    
+            <tr>
+                <th>Alias</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%if otherUsers %}   
+            {% for key in otherUsers %}
+            <tr>
+                <td><a href="user/{{key.id}}/">{{key.first_name}}</a></td>
+                <td> <form method="POST" action="add/{{key.id}}/">
+                    {% csrf_token %}
+                    <input type="submit" value="Add as Friend">
+                </form>
+            </td>
+            </tr>
+            {%endfor%}
+            {%else%}
+            <h4 class="alert alert-info">All users are your friends. </h4>
+            {%endif%}
+            </tbody>
+            </table>
+           
+        
+        {%endif%}
+    </div>
+</body>
+</html>
